@@ -1,33 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="Windows Mac Keyboard Layout" Language="1033" Version="1.0.0.0" Manufacturer="Dimka.com" UpgradeCode="604ed8c0-4a8c-4da0-a750-1fc5e1746874">
-    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="Windows Mac Keyboard Layout" 
+           Language="1033" 
+           Version="1.0.0.0" 
+           Manufacturer="Dimka.com" 
+           UpgradeCode="604ed8c0-4a8c-4da0-a750-1fc5e1746874">
     
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-    <MediaTemplate />
+    <MediaTemplate EmbedCab="yes" />
     
-    <Feature Id="ProductFeature" Title="Windows Mac Keyboard Layout" Level="1">
-      <ComponentGroupRef Id="ProductComponents" />
-    </Feature>
-  </Product>
+    <!-- Add Binary reference for the image -->
+    <Binary Id="LayoutImage" SourceFile="layout.bmp" />
+   
+    <!-- Custom UI -->
+    <UI>
+      <Dialog Id="CustomDlg" Width="370" Height="270" Title="Windows Mac Keyboard Layout">
+        <!-- Layout image -->
+        <Control Id="LayoutImage" Type="Bitmap" X="20" Y="20" Width="330" Height="150" Text="[LayoutImage]" />
+        
+        <!-- Enable by default checkbox -->
+        <Control Id="EnableCheckBox" Type="CheckBox" X="20" Y="180" Width="200" Height="17" 
+                Property="ENABLE_BY_DEFAULT" CheckBoxValue="1" 
+                Text="Enable Russian (Mac) layout by default" />
+        
+        <!-- Project link -->
+        <Control Id="ProjectLink" Type="Hyperlink" X="20" Y="200" Width="200" Height="17">
+          <Text><![CDATA[<a href="https://github.com/yourproject">Visit Project Page</a>]]></Text>
+        </Control>
+        
+        <!-- Buttons -->
+        <Control Id="InstallButton" Type="PushButton" X="230" Y="240" Width="56" Height="17" Default="yes" Text="Install">
+          <Publish Event="EndDialog" Value="Return">1</Publish>
+        </Control>
+        <Control Id="CancelButton" Type="PushButton" X="304" Y="240" Width="56" Height="17" Cancel="yes" Text="Cancel">
+          <Publish Event="EndDialog" Value="Exit">1</Publish>
+        </Control>
+      </Dialog>
 
-  <Fragment>
-    <Directory Id="TARGETDIR" Name="DLLs">
-      <Directory Id="SystemFolder" />
-    </Directory>
-  </Fragment>
+      <!-- Show our custom dialog first -->
+      <InstallUISequence>
+        <Show Dialog="CustomDlg" Before="ExecuteAction" />
+      </InstallUISequence>
+    </UI>
 
-  <Fragment>
-    <ComponentGroup Id="ProductComponents" Directory="SystemFolder">
+    <!-- Property for checkbox -->
+    <Property Id="ENABLE_BY_DEFAULT" Value="0" />
+    
+    <StandardDirectory Id="SystemFolder">
       <Component Id="KeyboardLayoutDLL" Guid="*">
-        <File Id="KeyboardLayoutDLL" Name="KbdRuMac.dll" Source="DLLs" KeyPath="yes" />
-        <RegistryKey Root="HKLM" Key="Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\d0000042">
+        <File Id="KeyboardLayoutDLL" Source="DLLs\KbdRuMac.dll" />
+        <RegistryKey Root="HKLM" Key="SYSTEM\CurrentControlSet\Control\Keyboard Layouts\d0000042">
             <RegistryValue Type="string" Name="Layout File" Value="KbdRuMac.dll" />
             <RegistryValue Type="string" Name="Layout Text" Value="Russian (Mac)" />
             <RegistryValue Type="string" Name="Layout ID" Value="0042" />
             <RegistryValue Type="string" Name="Layout Display Name" Value="Russian (Mac)" />
         </RegistryKey>
       </Component>
-    </ComponentGroup>
-  </Fragment>
+    </StandardDirectory>
+
+  </Package>
 </Wix>
