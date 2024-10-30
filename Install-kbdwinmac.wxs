@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="Windows Mac Keyboard Layout" Language="1033" Version="1.0.0.0" Manufacturer="Dimka.com" UpgradeCode="604ed8c0-4a8c-4da0-a750-1fc5e1746874">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate />
+    
+    <Feature Id="ProductFeature" Title="Windows Mac Keyboard Layout" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="DLLs">
+      <Directory Id="SystemFolder" />
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="SystemFolder">
+      <Component Id="KeyboardLayoutDLL" Guid="*">
+        <File Id="KeyboardLayoutDLL" Name="KbdRuMac.dll" Source="DLLs" KeyPath="yes" />
+        <RegistryKey Root="HKLM" Key="Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layouts\d0000042">
+            <RegistryValue Type="string" Name="Layout File" Value="KbdRuMac.dll" />
+            <RegistryValue Type="string" Name="Layout Text" Value="Russian (Mac)" />
+            <RegistryValue Type="string" Name="Layout ID" Value="0042" />
+            <RegistryValue Type="string" Name="Layout Display Name" Value="Russian (Mac)" />
+        </RegistryKey>
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
