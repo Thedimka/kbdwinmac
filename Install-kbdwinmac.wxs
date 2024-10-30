@@ -8,41 +8,32 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
     
-    <!-- Add Binary reference for the image -->
     <Binary Id="LayoutImage" SourceFile="layout.bmp" />
    
-    <!-- Custom UI -->
     <UI>
       <Dialog Id="CustomDlg" Width="370" Height="270" Title="Windows Mac Keyboard Layout">
-        <!-- Layout image -->
         <Control Id="LayoutImage" Type="Bitmap" X="20" Y="20" Width="330" Height="150" Text="[LayoutImage]" />
         
-        <!-- Enable by default checkbox -->
         <Control Id="EnableCheckBox" Type="CheckBox" X="20" Y="180" Width="200" Height="17" 
                 Property="ENABLE_BY_DEFAULT" CheckBoxValue="1" 
                 Text="Enable Russian (Mac) layout by default" />
         
-        <!-- Project link -->
-        <Control Id="ProjectLink" Type="Hyperlink" X="20" Y="200" Width="200" Height="17">
-          <Text><![CDATA[<a href="https://github.com/yourproject">Visit Project Page</a>]]></Text>
-        </Control>
+        <Control Id="ProjectLink" Type="Hyperlink" X="20" Y="200" Width="200" Height="17" 
+                Text="Visit project on GitHub" />
         
-        <!-- Buttons -->
         <Control Id="InstallButton" Type="PushButton" X="230" Y="240" Width="56" Height="17" Default="yes" Text="Install">
-          <Publish Event="EndDialog" Value="Return">1</Publish>
+          <Publish Event="EndDialog" Value="Return" />
         </Control>
         <Control Id="CancelButton" Type="PushButton" X="304" Y="240" Width="56" Height="17" Cancel="yes" Text="Cancel">
-          <Publish Event="EndDialog" Value="Exit">1</Publish>
+          <Publish Event="EndDialog" Value="Exit" />
         </Control>
       </Dialog>
 
-      <!-- Show our custom dialog first -->
       <InstallUISequence>
         <Show Dialog="CustomDlg" Before="ExecuteAction" />
       </InstallUISequence>
     </UI>
 
-    <!-- Property for checkbox -->
     <Property Id="ENABLE_BY_DEFAULT" Value="0" />
     
     <StandardDirectory Id="SystemFolder">
